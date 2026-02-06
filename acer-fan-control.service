@@ -1,0 +1,13 @@
+[Unit]
+Description=Acer Nitro 5 Fan Control
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStartPre=/sbin/modprobe ec_sys write_support=1
+ExecStart=/usr/bin/python3 -u /usr/local/bin/acer-fan-control
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
