@@ -1,17 +1,31 @@
 # Acer Nitro 5 Fan Control for Linux
 
-Temperature-based fan control daemon for Acer Nitro 5 laptops. Replaces the default 100% fan speed on Linux with a quiet, temperature-responsive curve.
+Fan control daemon for Acer Nitro 5 on Linux. Fixes fans running at 100% and loud fan noise at idle. A lightweight NitroSense alternative.
+
+## The Problem
+
+Acer Nitro 5 laptops have no fan control on Linux - the OS cannot access BIOS thermal controls, so the fans run at full speed constantly. This makes the laptop unusably loud, even when idle or just browsing.
+
+This daemon fixes it by controlling fan speeds through the EC (Embedded Controller) based on CPU/GPU temperatures.
 
 **Warning:** This software manipulates EC registers directly. Use at your own risk. If something goes wrong, reboot to restore BIOS control.
 
 ## Supported Models
 
-- AN515-55 (tested)
-- AN515-57 and similar models may work
+Check your model: `cat /sys/class/dmi/id/product_name`
+
+**Confirmed working:**
+- AN515-55 (tested by maintainer)
+
+**Should work** (same EC registers):
+- AN515-54, AN515-56, AN515-57
+- AN517-51, AN517-52
+
+If it works on your model, please open a PR to add it to the confirmed list.
 
 ## Install
 
-Requires `lm-sensors` (`sudo apt install lm-sensors` on Debian/Ubuntu).
+Requires `lm-sensors`. On Ubuntu/Debian: `sudo apt install lm-sensors`.
 
 ```bash
 sudo make install
@@ -34,10 +48,9 @@ sudo python3 acer-fan-control.py --dry-run
 
 | Temperature | Fan Speed |
 |-------------|-----------|
-| < 50C       | 30%       |
-| 50-65C      | 40%       |
-| 65-75C      | 55%       |
-| 75-85C      | 70%       |
+| < 50C       | 10%       |
+| 50-75C      | 30%       |
+| 75-85C      | 50%       |
 | > 85C       | 100%      |
 
 Edit `/etc/acer-fan-control.conf` to customize.
@@ -50,7 +63,7 @@ sudo make uninstall
 
 ## How It Works
 
-The daemon reads CPU/GPU temperatures every 2 seconds and writes fan speeds to the laptop's Embedded Controller (EC) via `/sys/kernel/debug/ec/ec0/io`.
+The daemon reads CPU/GPU temperatures every 2 seconds and writes fan speeds to the EC via `/sys/kernel/debug/ec/ec0/io` using the `ec_sys` kernel module.
 
 | Register | Address | Purpose |
 |----------|---------|---------|
@@ -59,7 +72,19 @@ The daemon reads CPU/GPU temperatures every 2 seconds and writes fan speeds to t
 | 55 | 0x37 | CPU fan speed (0-100%) |
 | 58 | 0x3a | GPU fan speed (0-100%) |
 
-The `ec_sys` kernel module with `write_support=1` exposes these registers to userspace.
+## Why Not nbfc-linux?
+
+[nbfc-linux](https://github.com/nbfc-linux/nbfc-linux) is a popular fan control tool, but it has issues with Acer Nitro 5:
+
+- No official config for Nitro 5 - you have to try configs from similar models
+- Only "guides" fan speeds - BIOS can override, so fans may still run full speed
+- Some Nitro models have locked EC registers that nbfc can't access
+
+This daemon uses direct EC register writes, giving full control over fan speeds on supported models.
+
+## Support
+
+If this helped you, consider [buying me a coffee](https://buymeacoffee.com/codeholic).
 
 ## License
 
