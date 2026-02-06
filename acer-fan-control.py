@@ -75,10 +75,19 @@ def get_gpu_temp():
 
 
 def calc_fan_speed(temp, thresholds):
-    for threshold, speed in thresholds:
+    # thresholds is sorted descending by temperature
+    for i, (threshold, speed) in enumerate(thresholds):
         if temp >= threshold:
-            return speed
-    return 30
+            if i == 0:
+                # Above highest threshold
+                return speed
+            # Interpolate between this point and the previous (higher) one
+            high_temp, high_speed = thresholds[i - 1]
+            low_temp, low_speed = threshold, speed
+            ratio = (temp - low_temp) / (high_temp - low_temp)
+            return int(low_speed + ratio * (high_speed - low_speed))
+    # Below lowest threshold
+    return thresholds[-1][1] if thresholds else 30
 
 
 def write_ec(register, value, dry_run=False):

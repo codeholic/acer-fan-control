@@ -48,18 +48,16 @@ sudo python3 acer-fan-control.py --dry-run
 
 ## Fan Curve
 
+Fan speeds are linearly interpolated between threshold points for smooth transitions.
+
 | Temperature | Fan Speed |
 |-------------|-----------|
 | < 45C       | 10%       |
-| 45-50C      | 15%       |
-| 50-55C      | 20%       |
-| 55-60C      | 25%       |
-| 60-65C      | 30%       |
-| 65-70C      | 35%       |
-| 70-75C      | 40%       |
-| 75-80C      | 50%       |
-| 80-85C      | 75%       |
-| > 85C       | 100%      |
+| 45C         | 15%       |
+| 70C         | 40%       |
+| 75C         | 50%       |
+| 80C         | 75%       |
+| 85C+        | 100%      |
 
 Edit `/etc/acer-fan-control.conf` to customize.
 
