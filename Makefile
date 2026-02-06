@@ -10,8 +10,7 @@ install:
 	@grep -q 'write_support=1' /etc/modprobe.d/ec_sys.conf 2>/dev/null || echo "options ec_sys write_support=1" > /etc/modprobe.d/ec_sys.conf
 	@# Install files
 	install -m 755 acer-fan-control.py $(PREFIX)/bin/acer-fan-control
-	@mkdir -p $(PREFIX)/etc
-	@test -f $(PREFIX)/etc/acer-fan-control.conf || install -m 644 acer-fan-control.conf $(PREFIX)/etc/acer-fan-control.conf
+	@test -f /etc/acer-fan-control.conf || install -m 644 acer-fan-control.conf /etc/acer-fan-control.conf
 	install -m 644 acer-fan-control.service /etc/systemd/system/
 	@# Enable and start service
 	systemctl daemon-reload
@@ -23,4 +22,4 @@ uninstall:
 	rm -f $(PREFIX)/bin/acer-fan-control
 	rm -f /etc/systemd/system/acer-fan-control.service
 	systemctl daemon-reload
-	@echo "Uninstalled. Config left at $(PREFIX)/etc/acer-fan-control.conf"
+	@echo "Uninstalled. Config left at /etc/acer-fan-control.conf"

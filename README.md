@@ -40,7 +40,7 @@ sudo python3 acer-fan-control.py --dry-run
 | 75-85C      | 70%       |
 | > 85C       | 100%      |
 
-Edit `/usr/local/etc/acer-fan-control.conf` to customize.
+Edit `/etc/acer-fan-control.conf` to customize.
 
 ## Uninstall
 

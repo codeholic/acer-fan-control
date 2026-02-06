@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 
 EC_PATH = Path("/sys/kernel/debug/ec/ec0/io")
-CONFIG_PATH = Path("/usr/local/etc/acer-fan-control.conf")
+CONFIG_PATH = Path("/etc/acer-fan-control.conf")
 REG_CPU_FAN_CONTROL = 34
 REG_GPU_FAN_CONTROL = 33
 REG_CPU_FAN_SPEED = 55
