@@ -27,6 +27,8 @@ If it works on your model, please open a PR to add it to the confirmed list.
 
 Requires `lm-sensors`. On Ubuntu/Debian: `sudo apt install lm-sensors`.
 
+For NVIDIA GPU temperature support, `nvidia-smi` must be available (comes with NVIDIA drivers). Without it, GPU fan speed is based on CPU temperature.
+
 ```bash
 sudo make install
 ```
